@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -15,7 +16,8 @@ func FloatToString(input_num float64, roundLimit int) string {
 	return strconv.FormatFloat(input_num, 'f', roundLimit, 64)
 }
 
-func randFloat(min, max float64, precision int) float64 {
+//Дает случайное число float64
+func RandFloat(min, max float64, precision int) float64 {
 	res := min + rand.Float64()*(max-min)
 	res = toFixed(res, precision)
 	return res
@@ -28,25 +30,6 @@ func toFixed(num float64, precision int) float64 {
 
 func round(num float64) int {
 	return int(num + math.Copysign(0.5, num))
-}
-
-func roll1dX(x int, mod int) int {
-	if x < 1 {
-		x = 1
-	}
-	return randInt(1, x) + mod
-}
-
-func rollXdY(x int, y int) int {
-	res := 0
-	for i := 0; i < x; i++ {
-		res = res + roll1dX(y, 0)
-	}
-	return res
-}
-
-func randInt(min int, max int) int {
-	return min + rand.Intn(max)
 }
 
 func romanNumberStr(i int) string {
@@ -237,4 +220,54 @@ func askYesNo(str string) bool {
 	}
 	return false
 
+}
+
+func roll1dX(x int) int {
+	if x < 1 {
+		x = 1
+	}
+	return randInt(1, x)
+}
+
+func rollXdY(x int, y int) int {
+	res := 0
+	for i := 0; i < x; i++ {
+		res = res + roll1dX(y)
+	}
+	return res
+}
+
+//RandomSeed - Дает случайный Seed
+func RandomSeed() int64 {
+	seed := time.Now().UnixNano()
+	rand.Seed(seed)
+	return seed
+}
+
+func randInt(min int, max int) int {
+	return min + rand.Intn(max)
+}
+
+//RollDice - возвращает результат броска нескольких дайсов по выражению '2d6' и добавляет N модификаторов к результату. Если X не указан, то равен 1 ('d6')
+func RollDice(expression string, mods ...int) int {
+	diceData := strings.Split(expression, "d")
+	diceQty := 1
+	diceType := 1
+	switch len(diceData) {
+	case 0:
+		return -999
+	case 1:
+		diceType, _ = strconv.Atoi(diceData[0])
+	default:
+		diceQty, _ = strconv.Atoi(diceData[0])
+		if diceData[0] == "" {
+			diceQty = 1
+		}
+		diceType, _ = strconv.Atoi(diceData[1])
+	}
+	result := rollXdY(diceQty, diceType)
+	for i := range mods {
+		result = result + mods[i]
+	}
+	return result
 }
