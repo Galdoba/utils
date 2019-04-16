@@ -219,7 +219,7 @@ func askYesNo(str string) bool {
 		}
 	}
 	return false
-
+ 
 }
 
 func roll1dX(x int) int {
