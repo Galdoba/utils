@@ -71,21 +71,12 @@ func romanNumberStr(i int) string {
 }
 
 //RandomFromList - возвращает случайное значение из списка ([]string)
-func RandomFromList(sl ...interface{}) int {
+func RandomFromList(sl []string) string {
 	l := len(sl)
-	if l < 1 {
-		return -1
-	}
-	return randInt(0, l-1)
-}
-
-//RandomFromList - возвращает случайный стринг из предоставленных
-func RandomStr(str ...string) string {
-	l := len(str)
 	if l < 1 {
 		return "Null"
 	}
-	return str[randInt(0, l-1)]
+	return sl[randInt(0, l-1)]
 }
 
 func randomSeed() int64 {
