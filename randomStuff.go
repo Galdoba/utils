@@ -70,7 +70,8 @@ func romanNumberStr(i int) string {
 	return res
 }
 
-func getRandomFromSliceStr(sl []string) string {
+//RandomFromList - возвращает случайное значение из списка ([]string)
+func RandomFromList(sl []string) string {
 	l := len(sl)
 	if l < 1 {
 		return "Null"
@@ -78,7 +79,8 @@ func getRandomFromSliceStr(sl []string) string {
 	return sl[randInt(0, l-1)]
 }
 
-func randomString(str ...string) string {
+//RandomFromList - возвращает случайный стринг из предоставленных
+func RandomStr(str ...string) string {
 	l := len(str)
 	if l < 1 {
 		return "Null"
@@ -219,7 +221,7 @@ func askYesNo(str string) bool {
 		}
 	}
 	return false
- 
+
 }
 
 func roll1dX(x int) int {
