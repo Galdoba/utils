@@ -70,6 +70,14 @@ func romanNumberStr(i int) string {
 	return res
 }
 
+func RandomBool() bool {
+	r := randInt(1, 2)
+	if r/2 == 1 {
+		return true
+	}
+	return false
+}
+
 //RandomFromList - возвращает случайное значение из списка ([]string)
 func RandomFromList(sl []string) string {
 	l := len(sl)
