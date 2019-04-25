@@ -42,3 +42,37 @@ func FileNames(dir, marker string) []string {
 	return names
 
 }
+
+//EditLineInFile - заменяет строку номер n в файле поадресу file на newContent
+func EditLineInFile(file string, n int, newContent string) {
+	lines := LinesFromTXT(file)
+	lines[n] = newContent
+	output := strings.Join(lines, "\n")
+	err := ioutil.WriteFile(file, []byte(output), 0644)
+	if err != nil {
+		log.Fatalln(err)
+	}
+}
+
+//InFileContains - Возвращает номер строки в котором содержится content
+func InFileContains(file, content string) int {
+	lines := LinesFromTXT(file)
+	for i := range lines {
+		if strings.Contains(lines[i], content) {
+			return i
+		}
+	}
+	return -1
+}
+
+//InFileContainsN - Возвращает слайс с номерами строк в которых содержится content
+func InFileContainsN(file, content string) []int {
+	lines := LinesFromTXT(file)
+	var numbers []int
+	for i := range lines {
+		if strings.Contains(lines[i], content) {
+			numbers = append(numbers, i)
+		}
+	}
+	return numbers
+}
