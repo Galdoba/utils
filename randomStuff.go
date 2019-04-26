@@ -84,7 +84,7 @@ func RandomFromList(sl []string) string {
 	if l < 1 {
 		return "Null"
 	}
-	return sl[randInt(0, l-1)]
+	return sl[randInt(0, l)]
 }
 
 func randomSeed() int64 {
