@@ -93,7 +93,8 @@ func randomSeed() int64 {
 	return seed
 }
 
-func inRange(i, min, max int) bool {
+//InRange - возвращает true если i в диапозоне min-max
+func InRange(i, min, max int) bool {
 	if i > min-1 && i < max+1 {
 		return true
 	}
