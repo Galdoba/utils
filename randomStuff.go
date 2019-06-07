@@ -70,12 +70,24 @@ func romanNumberStr(i int) string {
 	return res
 }
 
+//RandomBool - дает рандомный true/false
 func RandomBool() bool {
 	r := randInt(1, 2)
 	if r/2 == 1 {
 		return true
 	}
 	return false
+}
+
+//MaybeSlice - создает []string из данных опций. вероятность попадания опций 50%
+func MaybeSlice(opt ...string) []string {
+	var result []string
+	for i := range opt {
+		if RandomBool() {
+			result = append(result, opt[i])
+		}
+	}
+	return result
 }
 
 //RandomFromList - возвращает случайное значение из списка ([]string)
