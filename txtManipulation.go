@@ -8,6 +8,43 @@ import (
 	"strings"
 )
 
+const (
+	asciiBlack   = "\u001b[30;1m"
+	asciiRed     = "\u001b[31;1m"
+	asciiGreen   = "\u001b[32;1m"
+	asciiYellow  = "\u001b[33;1m"
+	asciiBlue    = "\u001b[34;1m"
+	asciiMagenta = "\u001b[35;1m"
+	asciiCyan    = "\u001b[36;1m"
+	asciiWhite   = "\u001b[37;1m"
+)
+
+//AsciiColor - возвращает string покрашенный в 1 из RGB/CMYK цветов для терминала. (регистро не чувствительно)
+//если цвет не определен - возвращает только string
+func AsciiColor(col string, text string) string {
+	col = strings.ToUpper(col)
+	switch col {
+	case "RED":
+		return asciiRed + text + asciiWhite
+	case "GREEN":
+		return asciiGreen + text + asciiWhite
+	case "YELLOW":
+		return asciiYellow + text + asciiWhite
+	case "BLUE":
+		return asciiBlue + text + asciiWhite
+	case "MAGENTA":
+		return asciiMagenta + text + asciiWhite
+	case "CYAN":
+		return asciiCyan + text + asciiWhite
+	case "BLACK":
+		return asciiBlack + text + asciiWhite
+	case "WHITE":
+		return asciiWhite + text + asciiWhite
+
+	}
+	return text
+}
+
 //LinesFromTXT - открывает txt и возвращает построчно всё его содержимое
 func LinesFromTXT(path string) []string {
 	var lines []string
