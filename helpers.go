@@ -2,7 +2,6 @@ package utils
 
 import (
 	"fmt"
-	"go/types"
 )
 
 func CheckError(descr string, err error) string {
@@ -16,7 +15,7 @@ func CheckError(descr string, err error) string {
 
 //AppendUnique - проверяет есть ли новый элемент в слайсе.
 //Если нет, то добавляет его в слайс. В противном случае возвращает слайс без изменений.
-func AppendUnique(slice []types.Type, newElem types.Type) []types.Type {
+func AppendUnique(slice []interface{}, newElem interface{}) []interface{} {
 	for i := range slice {
 		if slice[i] == newElem {
 			return slice
