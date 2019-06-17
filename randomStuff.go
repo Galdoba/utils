@@ -19,11 +19,12 @@ func FloatToString(input_num float64, roundLimit int) string {
 //Дает случайное число float64
 func RandFloat(min, max float64, precision int) float64 {
 	res := min + rand.Float64()*(max-min)
-	res = toFixed(res, precision)
+	res = RoundFloat64(res, precision)
 	return res
 }
 
-func toFixed(num float64, precision int) float64 {
+//RoundFloat64 - округляет float64 до требуемого кол-ва разрядов
+func RoundFloat64(num float64, precision int) float64 {
 	output := math.Pow(10, float64(precision))
 	return float64(round(num*output)) / output
 }
