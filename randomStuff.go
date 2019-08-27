@@ -259,6 +259,12 @@ func RandomSeed() int64 {
 	return seed
 }
 
+//SetSeed - задает Конкретный Seed
+func SetSeed(seed int64) int64 {
+	rand.Seed(seed)
+	return seed
+}
+
 func randInt(min int, max int) int {
 	return min + rand.Intn(max)
 }
