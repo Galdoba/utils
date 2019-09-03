@@ -100,6 +100,21 @@ func RandomFromList(sl []string) string {
 	return sl[randInt(0, l)]
 }
 
+//ListContains - возвращает true, если елемент присутствует в списке,
+//и false если нет или список имеет нулевую длинну.
+func ListContains(list []string, elem string) bool {
+	if len(list) == 0 {
+		return false
+	}
+	for i := range list {
+		if elem == list[i] {
+			return true
+		}
+	}
+
+	return false
+}
+
 func randomSeed() int64 {
 	seed := time.Now().UnixNano()
 	rand.Seed(seed)
