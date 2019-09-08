@@ -1,11 +1,11 @@
 package utils
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 )
 
+//TxtTable - текстовая таблица
 type TxtTable struct {
 	cells []string
 	rows  int
@@ -26,10 +26,24 @@ func NewTxtTable(path string) *TxtTable {
 		data := strings.Split(line, "	")
 		for j := range data {
 			tt.cells = append(tt.cells, data[j])
-			fmt.Println(data[j])
 		}
 	}
 	return tt
+}
+
+//Rows - возвращает кол-во строк
+func (table *TxtTable) Rows() int {
+	return table.rows
+}
+
+//Cols - возвращает кол-во колонок
+func (table *TxtTable) Cols() int {
+	return table.cols
+}
+
+//AllCells - возвращает весь массив данных в виде []string
+func (table *TxtTable) AllCells() []string {
+	return table.cells
 }
 
 //Cell - возвращет текст ячейки с заданными координатами
