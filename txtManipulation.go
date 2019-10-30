@@ -84,7 +84,7 @@ func FileNames(dir, marker string) []string {
 func EditLineInFile(file string, n int, newContent string) {
 	lines := LinesFromTXT(file)
 	lines[n] = newContent
-	output := strings.Join(lines, "\n")
+	output := strings.Join(lines, "\r\n")
 	err := ioutil.WriteFile(file, []byte(output), 0644)
 	if err != nil {
 		log.Fatalln(err)
