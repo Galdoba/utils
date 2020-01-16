@@ -284,7 +284,8 @@ func randInt(min int, max int) int {
 	return min + rand.Intn(max)
 }
 
-//RollDice - возвращает результат броска нескольких дайсов по выражению '2d6' и добавляет N модификаторов к результату. Если X не указан, то равен 1 ('d6')
+//RollDice - возвращает результат броска нескольких дайсов по выражению '2d6' и добавляет N модификаторов к результату.
+//Если X не указан, то равен 1 ('d6')
 func RollDice(expression string, mods ...int) int {
 	diceData := strings.Split(expression, "d")
 	diceQty := 1
