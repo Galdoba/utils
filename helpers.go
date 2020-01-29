@@ -3,6 +3,8 @@ package utils
 import (
 	"fmt"
 	"math/rand"
+
+	"github.com/Galdoba/convert"
 )
 
 //CheckError -
@@ -79,4 +81,70 @@ func BoundFloat64(x, min, max float64) float64 {
 		x = max
 	}
 	return x
+}
+
+//SelectionOptionsMult - позволяет выбрать несколько опций возвращая
+//перечни опций и решений от Пользователя
+func SelectionOptionsMult(descr string, opt ...string) ([]string, []bool) {
+	//сбор данных
+	var optSlice []string
+	var optStatuses []bool
+	optSlice = append(optSlice, descr)
+	optStatuses = append(optStatuses, false)
+	for i := range opt {
+		optSlice = append(optSlice, opt[i])
+		optStatuses = append(optStatuses, false)
+	}
+	optSlice = append(optSlice, "[DONE]")
+	optStatuses = append(optStatuses, false)
+	printAllOptions(optSlice, optStatuses)
+	done := false
+	for !done {
+		//pick := InputInt()
+		var pick int
+		fmt.Scan(&pick)
+		if InRange(pick, 1, len(optSlice)-1) {
+			fmt.Println("\033[0A"+convert.ItoS(pick), "toggled   ") //, optSlice[pick]) //убрать текст опции
+			optStatuses[pick] = !optStatuses[pick]
+		}
+		fmt.Print("\033[" + convert.ItoS(len(optStatuses)+1) + "A")
+		printAllOptions(optSlice, optStatuses)
+		if pick == len(optSlice)-1 {
+			done = true
+		}
+	}
+	//анализ и возврат
+	fmt.Println("\n")
+	var returnSlc []string
+	var resultSlc []bool
+	for i := range optSlice {
+		if i == 0 || i == len(optSlice)-1 {
+			continue
+		}
+		returnSlc = append(returnSlc, optSlice[i])
+		resultSlc = append(resultSlc, optStatuses[i])
+	}
+	return returnSlc, resultSlc
+}
+
+func printOption(optName string, optStatus bool, optNum int) {
+	status := " "
+	if optStatus == true {
+		status = "X"
+	}
+	num := convert.ItoS(optNum)
+	if InRange(optNum, 0, 9) {
+		num = " " + num
+	}
+	fmt.Println(num + " [" + status + "] -- " + optName)
+}
+
+func printAllOptions(optSlice []string, optStatuses []bool) {
+	for i := range optSlice {
+		if i == 0 {
+			fmt.Println(optSlice[0])
+		} else {
+			printOption(optSlice[i], optStatuses[i], i)
+		}
+	}
 }
