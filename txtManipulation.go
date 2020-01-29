@@ -19,9 +19,9 @@ const (
 	asciiWhite   = "\u001b[37;1m"
 )
 
-//AsciiColor - возвращает string покрашенный в 1 из RGB/CMYK цветов для терминала. (регистро не чувствительно)
+//ASCIIColor - возвращает string покрашенный в 1 из RGB/CMYK цветов для терминала. (регистро не чувствительно)
 //если цвет не определен - возвращает только string
-func AsciiColor(col string, text string) string {
+func ASCIIColor(col string, text string) string {
 	col = strings.ToUpper(col)
 	switch col {
 	case "RED":
@@ -84,7 +84,7 @@ func FileNames(dir, marker string) []string {
 func EditLineInFile(file string, n int, newContent string) {
 	lines := LinesFromTXT(file)
 	lines[n] = newContent
-	output := strings.Join(lines, "\r\n")
+	output := strings.Join(lines, "\n")
 	err := ioutil.WriteFile(file, []byte(output), 0644)
 	if err != nil {
 		log.Fatalln(err)

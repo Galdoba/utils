@@ -1,10 +1,11 @@
 package utils
 
 import (
-	"runtime"
 	"fmt"
+	"runtime"
 )
 
+//Min -
 func Min(a, b int) int {
 	if a < b {
 		return a
@@ -12,6 +13,7 @@ func Min(a, b int) int {
 	return b
 }
 
+//Max -
 func Max(a, b int) int {
 	if a > b {
 		return a
@@ -19,6 +21,7 @@ func Max(a, b int) int {
 	return b
 }
 
+//Assert -
 func Assert(ok bool, s string) {
 	if !ok {
 		_, file, line, _ := runtime.Caller(1)

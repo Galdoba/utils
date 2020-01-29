@@ -11,12 +11,13 @@ import (
 	"time"
 )
 
-func FloatToString(input_num float64, roundLimit int) string {
+//FloatToString -
+func FloatToString(inputNum float64, roundLimit int) string {
 	// to convert a float number to a string
-	return strconv.FormatFloat(input_num, 'f', roundLimit, 64)
+	return strconv.FormatFloat(inputNum, 'f', roundLimit, 64)
 }
 
-//Дает случайное число float64
+//RandFloat - Дает случайное число float64
 func RandFloat(min, max float64, precision int) float64 {
 	res := min + rand.Float64()*(max-min)
 	res = RoundFloat64(res, precision)

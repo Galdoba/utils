@@ -5,6 +5,7 @@ import (
 	"math/rand"
 )
 
+//CheckError -
 func CheckError(descr string, err error) string {
 	message := ""
 	if err != nil {
@@ -56,4 +57,26 @@ func AppendUniqueInt(slice []int, newElem int) []int {
 	}
 	slice = append(slice, newElem)
 	return slice
+}
+
+//BoundInt - если х не вписывается в min или max, приравнивает х к ближайшему из них.
+func BoundInt(x, min, max int) int {
+	if x < min {
+		x = min
+	}
+	if x > max {
+		x = max
+	}
+	return x
+}
+
+//BoundFloat64 - если х не вписывается в min или max, приравнивает х к ближайшему из них.
+func BoundFloat64(x, min, max float64) float64 {
+	if x < min {
+		x = min
+	}
+	if x > max {
+		x = max
+	}
+	return x
 }

@@ -74,7 +74,6 @@ func tableValid(table string) bool {
 func tableDimentions(table string) (rows, cols int) {
 	if !tableValid(table) {
 		panic(0)
-		return 0, 0
 	}
 	head := LinesFromTXT(table)[0]
 	data := strings.Split(head, " = ")
