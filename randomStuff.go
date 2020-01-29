@@ -280,11 +280,28 @@ func SetSeed(seed int64) int64 {
 	return seed
 }
 
+//SeedFromString - задает Seed по ключу key
+func SeedFromString(key string) int64 {
+	bytes := []byte(key)
+	var seed int64
+	for i := range bytes {
+		r := rune(bytes[i])
+		p := int64(r) * int64(i+1)
+		seed = seed + p
+		fmt.Println(i, r, p, seed)
+		// if i > 255 { Возможно понадобится ограничитель
+		// 	break
+		// }
+	}
+	return seed
+}
+
 func randInt(min int, max int) int {
 	return min + rand.Intn(max)
 }
 
-//RollDice - возвращает результат броска нескольких дайсов по выражению '2d6' и добавляет N модификаторов к результату. Если X не указан, то равен 1 ('d6')
+//RollDice - возвращает результат броска нескольких дайсов по выражению '2d6'
+//и добавляет N модификаторов к результату. Если X не указан, то равен 1 ('d6')
 func RollDice(expression string, mods ...int) int {
 	diceData := strings.Split(expression, "d")
 	diceQty := 1
