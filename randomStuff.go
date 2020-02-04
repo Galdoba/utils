@@ -289,7 +289,7 @@ func SeedFromString(key string) int64 {
 		r := rune(bytes[i])
 		p := int64(r) * int64(i+1)
 		seed = seed + p
-		fmt.Println(i, r, p, seed)
+		//fmt.Println(i, r, p, seed)
 		// if i > 255 { Возможно понадобится ограничитель
 		// 	break
 		// }
