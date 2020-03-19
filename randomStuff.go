@@ -325,3 +325,51 @@ func RollDice(expression string, mods ...int) int {
 	}
 	return result
 }
+
+//RollDiceRandom - тоже что и RollDice, но создает временный случайный Seed
+func RollDiceRandom(expression string, mods ...int) int {
+	diceData := strings.Split(expression, "d")
+	diceQty := 1
+	diceType := 1
+	switch len(diceData) {
+	case 0:
+		return -999
+	case 1:
+		diceType, _ = strconv.Atoi(diceData[0])
+	default:
+		diceQty, _ = strconv.Atoi(diceData[0])
+		if diceData[0] == "" {
+			diceQty = 1
+		}
+		diceType, _ = strconv.Atoi(diceData[1])
+	}
+
+	result := rollXdYr(diceQty, diceType)
+	for i := range mods {
+		result = result + mods[i]
+	}
+	return result
+}
+
+func roll1dXr(x int) int {
+	if x < 1 {
+		x = 1
+	}
+	return randIntr(1, x)
+}
+
+func rollXdYr(x int, y int) int {
+	res := 0
+	for i := 0; i < x; i++ {
+		res = res + roll1dXr(y)
+	}
+	return res
+}
+
+func randIntr(min int, max int) int {
+	time.Sleep(time.Nanosecond)
+	s1 := rand.NewSource(time.Now().UnixNano())
+	r1 := rand.New(s1)
+
+	return min + r1.Intn(max)
+}
