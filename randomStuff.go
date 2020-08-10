@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"bufio"
 	"fmt"
 	"math"
 	"math/rand"
@@ -197,12 +198,20 @@ func InputFloat64(descr ...string) float64 {
 	return dataVal
 }
 
-//InputString - takes Float64 from User
+//InputString - LEGACY
 func InputString(descr ...string) string {
 	describe(descr)
-	var dataVal string
-	fmt.Scan(&dataVal)
-	return dataVal
+	// var dataVal string
+	// fmt.Scan(&dataVal)
+	// return dataVal
+	in := bufio.NewReader(os.Stdin)
+	line, err := in.ReadString('\n')
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	line = strings.TrimSuffix(line, "\n")
+	line = strings.TrimSuffix(line, "\r")
+	return line
 }
 
 //Str2Float64 - convert String to Float64
