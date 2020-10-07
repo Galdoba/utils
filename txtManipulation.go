@@ -102,6 +102,20 @@ func AddLineToFile(file string, newContent string) {
 	}
 }
 
+//DeleteLineFromFileN - удаляет строку номер n
+func DeleteLineFromFileN(file string, n int) {
+	lines := LinesFromTXT(file)
+	lines = append(lines[:n], lines[n+1:]...)
+	if n < 0 || n > len(lines) {
+		return
+	}
+	output := strings.Join(lines, "\n")
+	err := ioutil.WriteFile(file, []byte(output), 0644)
+	if err != nil {
+		log.Fatalln(err)
+	}
+}
+
 //InFileContains - Возвращает номер строки в котором содержится content
 func InFileContains(file, content string) int {
 	lines := LinesFromTXT(file)
