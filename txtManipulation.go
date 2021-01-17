@@ -91,6 +91,31 @@ func EditLineInFile(file string, n int, newContent string) {
 	}
 }
 
+//AddLineToFile - добаляет строку в файл поадресу file
+func AddLineToFile(file string, newContent string) {
+	lines := LinesFromTXT(file)
+	lines = append(lines, newContent)
+	output := strings.Join(lines, "\n")
+	err := ioutil.WriteFile(file, []byte(output), 0644)
+	if err != nil {
+		log.Fatalln(err)
+	}
+}
+
+//DeleteLineFromFileN - удаляет строку номер n
+func DeleteLineFromFileN(file string, n int) {
+	lines := LinesFromTXT(file)
+	lines = append(lines[:n], lines[n+1:]...)
+	if n < 0 || n > len(lines) {
+		return
+	}
+	output := strings.Join(lines, "\n")
+	err := ioutil.WriteFile(file, []byte(output), 0644)
+	if err != nil {
+		log.Fatalln(err)
+	}
+}
+
 //InFileContains - Возвращает номер строки в котором содержится content
 func InFileContains(file, content string) int {
 	lines := LinesFromTXT(file)
