@@ -326,6 +326,10 @@ func RollDice(expression string, mods ...int) int {
 	return result
 }
 
+func TestFunc() {
+	fmt.Println("Test")
+}
+
 //RollDiceRandom - тоже что и RollDice, но создает временный случайный Seed
 func RollDiceRandom(expression string, mods ...int) int {
 	diceData := strings.Split(expression, "d")
