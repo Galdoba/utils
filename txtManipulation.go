@@ -138,3 +138,34 @@ func InFileContainsN(file, content string) []int {
 	}
 	return numbers
 }
+
+//CommonPrefix - Возвращает string из общих повторяющихся символов у полученных строк sl
+func CommonPrefix(sl ...string) string {
+	if len(sl) == 0 {
+		return ""
+	}
+	leastLen := 10000000
+	for _, v := range sl {
+		if len(v) < leastLen {
+			leastLen = len(v)
+		}
+	}
+	common := ""
+	dif := false
+mainCycle:
+	for l := 0; l < leastLen; l++ {
+		for i, v := range sl[1:] {
+			if dif || i > leastLen {
+				break mainCycle
+			}
+			if string(v[l]) != string(sl[0][l]) {
+				dif = true
+				continue
+			}
+		}
+		if !dif {
+			common += string(sl[0][l])
+		}
+	}
+	return common
+}
