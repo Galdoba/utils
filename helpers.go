@@ -3,6 +3,7 @@ package utils
 import (
 	"fmt"
 	"math/rand"
+	"strconv"
 
 	"github.com/Galdoba/convert"
 )
@@ -147,4 +148,18 @@ func printAllOptions(optSlice []string, optStatuses []bool) {
 			printOption(optSlice[i], optStatuses[i], i)
 		}
 	}
+}
+
+//ItoS - Int в String
+func ItoS(i int) string {
+	return strconv.Itoa(i)
+}
+
+//StoI - String в Int
+func StoI(s string) int {
+	in, err := strconv.Atoi(s)
+	if err != nil {
+		panic(err)
+	}
+	return in
 }
