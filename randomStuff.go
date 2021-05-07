@@ -35,51 +35,48 @@ func round(num float64) int {
 	return int(num + math.Copysign(0.5, num))
 }
 
-func romanNumberStr(i int) string {
-	res := ""
-	switch i {
-	case 1:
-		res = "I"
-	case 2:
-		res = "II"
-	case 3:
-		res = "III"
-	case 4:
-		res = "IV"
-	case 5:
-		res = "V"
-	case 6:
-		res = "VI"
-	case 7:
-		res = "VII"
-	case 8:
-		res = "VIII"
-	case 9:
-		res = "IX"
-	case 10:
-		res = "X"
-	case 11:
-		res = "XI"
-	case 12:
-		res = "XII"
-	case 13:
-		res = "XIII"
-	case 14:
-		res = "XIV"
-	case 15:
-		res = "XV"
-	default:
-	}
-	return res
-}
+// func romanNumberStr(i int) string {
+// 	res := ""
+// 	switch i {
+// 	case 1:
+// 		res = "I"
+// 	case 2:
+// 		res = "II"
+// 	case 3:
+// 		res = "III"
+// 	case 4:
+// 		res = "IV"
+// 	case 5:
+// 		res = "V"
+// 	case 6:
+// 		res = "VI"
+// 	case 7:
+// 		res = "VII"
+// 	case 8:
+// 		res = "VIII"
+// 	case 9:
+// 		res = "IX"
+// 	case 10:
+// 		res = "X"
+// 	case 11:
+// 		res = "XI"
+// 	case 12:
+// 		res = "XII"
+// 	case 13:
+// 		res = "XIII"
+// 	case 14:
+// 		res = "XIV"
+// 	case 15:
+// 		res = "XV"
+// 	default:
+// 	}
+// 	return res
+// }
 
 //RandomBool - дает рандомный true/false
 func RandomBool() bool {
 	r := randInt(1, 2)
-	if r/2 == 1 {
-		return true
-	}
-	return false
+	return r/2 == 1
 }
 
 //MaybeSlice - создает []string из данных опций. вероятность попадания опций 50%
@@ -117,11 +114,11 @@ func ListContains(list []string, elem string) bool {
 	return false
 }
 
-func randomSeed() int64 {
-	seed := time.Now().UnixNano()
-	rand.Seed(seed)
-	return seed
-}
+// func randomSeed() int64 {
+// 	seed := time.Now().UnixNano()
+// 	rand.Seed(seed)
+// 	return seed
+// }
 
 //InRange - возвращает true если i в диапозоне min-max
 func InRange(i, min, max int) bool {
@@ -131,9 +128,9 @@ func InRange(i, min, max int) bool {
 	return false
 }
 
-func combineStrings(s, add string) string {
-	return s + add
-}
+// func combineStrings(s, add string) string {
+// 	return s + add
+// }
 
 // function := map[string]func(int, int) int{
 // 	"someFunction1": someFunction1,
@@ -244,23 +241,23 @@ func ClearScreen() {
 	cmd.Run()
 }
 
-func askYesNo(str string) bool {
-	gotAnswer := false
-	for !gotAnswer {
-		fmt.Print(str + "(y/n) ")
-		answer := InputString()
-		switch answer {
-		case "y":
-			return true
-		case "n":
-			return false
-		default:
-			fmt.Println("Error: Answer is incorrect. (Type 'y' or 'n')")
-		}
-	}
-	return false
+// func askYesNo(str string) bool {
+// 	gotAnswer := false
+// 	for !gotAnswer {
+// 		fmt.Print(str + "(y/n) ")
+// 		answer := InputString()
+// 		switch answer {
+// 		case "y":
+// 			return true
+// 		case "n":
+// 			return false
+// 		default:
+// 			fmt.Println("Error: Answer is incorrect. (Type 'y' or 'n')")
+// 		}
+// 	}
+// 	return false
 
-}
+// }
 
 func roll1dX(x int) int {
 	if x < 1 {

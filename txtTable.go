@@ -90,8 +90,8 @@ func ParseValueInt(dataStr, dataType string) int {
 	return val
 }
 
-func getCell(line string, n int) string {
+// func getCell(line string, n int) string {
 
-	data := strings.Split(line, "	")
-	return data[n-1]
-}
+// 	data := strings.Split(line, "	")
+// 	return data[n-1]
+// }

@@ -116,7 +116,7 @@ func SelectionOptionsMult(descr string, opt ...string) ([]string, []bool) {
 		}
 	}
 	//анализ и возврат
-	fmt.Println("\n")
+	fmt.Print("\n")
 	var returnSlc []string
 	var resultSlc []bool
 	for i := range optSlice {
@@ -131,7 +131,7 @@ func SelectionOptionsMult(descr string, opt ...string) ([]string, []bool) {
 
 func printOption(optName string, optStatus bool, optNum int) {
 	status := " "
-	if optStatus == true {
+	if optStatus {
 		status = "X"
 	}
 	num := convert.ItoS(optNum)
