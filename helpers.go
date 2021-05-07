@@ -165,22 +165,33 @@ func StoI(s string) int {
 	return in
 }
 
-func FromTimeStamp(ts string) (int, error) {
+//TimeStampToSeconds - takes strings "dd:hh:mm:ss" and converts it to int seconds
+//returns 0 if string can nao be parced
+func TimeStampToSeconds(ts string) int {
 	totalSec := 0
 	data := strings.Split(ts, ":")
 	timeVal := []int{}
 	for _, val := range data {
 		time, err := strconv.Atoi(val)
 		if err != nil {
-			return 0, err
+			return 0
 		}
 		timeVal = append(timeVal, time)
 	}
+	for i, j := 0, len(timeVal)-1; i < j; i, j = i+1, j-1 { // reverse
+		timeVal[i], timeVal[j] = timeVal[j], timeVal[i]
+	}
 	for i := 0; i < len(timeVal); i++ {
-		switch len(timeVal) - 1 - i {
-		default:
-			fmt.Println(len(timeVal) - 1 - i)
+		switch i {
+		case 0:
+			totalSec = timeVal[i]
+		case 1:
+			totalSec = totalSec + (timeVal[i] * 60)
+		case 2:
+			totalSec = totalSec + (timeVal[i] * 3600)
+		case 3:
+			totalSec = totalSec + (timeVal[i] * 86400)
 		}
 	}
-	return totalSec, nil
+	return totalSec
 }
