@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 	"strconv"
+	"strings"
 
 	"github.com/Galdoba/convert"
 )
@@ -162,4 +163,24 @@ func StoI(s string) int {
 		panic(err)
 	}
 	return in
+}
+
+func FromTimeStamp(ts string) (int, error) {
+	totalSec := 0
+	data := strings.Split(ts, ":")
+	timeVal := []int{}
+	for _, val := range data {
+		time, err := strconv.Atoi(val)
+		if err != nil {
+			return 0, err
+		}
+		timeVal = append(timeVal, time)
+	}
+	for i := 0; i < len(timeVal); i++ {
+		switch len(timeVal) - 1 - i {
+		default:
+			fmt.Println(len(timeVal) - 1 - i)
+		}
+	}
+	return totalSec, nil
 }
