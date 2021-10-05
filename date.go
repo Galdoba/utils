@@ -6,8 +6,13 @@ import (
 )
 
 //DateStamp - return current date as a string in format: [YYYY-MM-DD]
-func DateStamp() string {
-	y, m, d := time.Now().Date()
+//can take time.Duration arguments to move from Current Date
+func DateStamp(durList ...time.Duration) string {
+	currentTime := time.Now()
+	for _, dur := range durList {
+		currentTime.Add(dur)
+	}
+	y, m, d := currentTime.Date()
 	yy := strconv.Itoa(y)
 	mm := strconv.Itoa(int(m))
 	dd := strconv.Itoa(d)
