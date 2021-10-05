@@ -10,7 +10,7 @@ import (
 func DateStamp(durList ...time.Duration) string {
 	currentTime := time.Now()
 	for _, dur := range durList {
-		currentTime.Add(dur)
+		currentTime = currentTime.Add(dur)
 	}
 	y, m, d := currentTime.Date()
 	yy := strconv.Itoa(y)
