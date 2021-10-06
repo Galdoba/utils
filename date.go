@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"strconv"
 	"time"
 )
@@ -57,4 +58,42 @@ func DurationStamp(dur float64) string {
 	stamp = hhs + ":" + mms + ":" + sss + "." + mss
 	return stamp
 
+}
+
+//DateStampFrom - same as DateStamp() but requires input Time
+func DateStampFrom(inputTime time.Time) string {
+	m := ""
+	switch inputTime.Month() {
+	case time.January:
+		m = "01"
+	case time.February:
+		m = "02"
+	case time.March:
+		m = "03"
+	case time.April:
+		m = "04"
+	case time.May:
+		m = "05"
+	case time.June:
+		m = "06"
+	case time.July:
+		m = "07"
+	case time.August:
+		m = "08"
+	case time.September:
+		m = "09"
+	case time.October:
+		m = "10"
+	case time.November:
+		m = "11"
+	case time.December:
+		m = "12"
+	default:
+		m = "Error"
+	}
+	d := strconv.Itoa(inputTime.Day())
+	if len(d) < 2 {
+		d = "0" + d
+	}
+	return fmt.Sprintf("%v-%v-%v", inputTime.Year(), m, d)
 }
