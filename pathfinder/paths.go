@@ -32,11 +32,11 @@ func WorkDir() string {
 }
 
 func ConfigDir() string {
-	return asDir(HomeDir() + sep + ".config")
+	return asDir(HomeDir() + ".config")
 }
 func LogDir() string {
-	return asDir(HomeDir() + sep + ".log")
+	return asDir(HomeDir() + ".log")
 }
 func ProgramsDir() string {
-	return asDir(HomeDir() + sep + "Programs")
+	return asDir(HomeDir() + "Programs")
 }
