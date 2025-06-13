@@ -40,3 +40,31 @@ func Insert[T any](slice []T, index int, elements ...T) []T {
 	slice = append(slice[:index], append(elements, slice[index:]...)...)
 	return slice
 }
+
+func FilterAny[T any](slice []T, conditionConfirmFuncs ...func(T) bool) []T {
+	newSlice := []T{}
+elementLoop:
+	for _, element := range slice {
+		for _, condition := range conditionConfirmFuncs {
+			if condition(element) {
+				newSlice = append(newSlice, element)
+				continue elementLoop
+			}
+		}
+	}
+	return newSlice
+}
+
+func FilterAll[T any](slice []T, conditionConfirmFuncs ...func(T) bool) []T {
+	newSlice := []T{}
+elementLoop:
+	for _, element := range slice {
+		for _, condition := range conditionConfirmFuncs {
+			if !condition(element) {
+				continue elementLoop
+			}
+		}
+		newSlice = append(newSlice, element)
+	}
+	return newSlice
+}
