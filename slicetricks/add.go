@@ -1,5 +1,6 @@
 package slicetricks
 
+// Contains - return true if element is present in slice.
 func Contains[T comparable](slice []T, element T) bool {
 	for _, s := range slice {
 		if element == s {
@@ -41,6 +42,8 @@ func Insert[T any](slice []T, index int, elements ...T) []T {
 	return slice
 }
 
+// FilterAny - filter slice to create new slice.
+// new slice consists of elements if ANy condition is true.
 func FilterAny[T any](slice []T, conditionConfirmFuncs ...func(T) bool) []T {
 	newSlice := []T{}
 elementLoop:
@@ -55,6 +58,8 @@ elementLoop:
 	return newSlice
 }
 
+// FilterAny - filter slice to create new slice.
+// new slice consists of elements if ALL condition is true.
 func FilterAll[T any](slice []T, conditionConfirmFuncs ...func(T) bool) []T {
 	newSlice := []T{}
 elementLoop:
@@ -67,4 +72,20 @@ elementLoop:
 		newSlice = append(newSlice, element)
 	}
 	return newSlice
+}
+
+// ExcludeDuplicates - return slice with all duplicated elebents excluded.
+func ExcludeDuplicates[T comparable](slice []T) []T {
+	elementsMet := make(map[T]int)
+	for _, element := range slice {
+		elementsMet[element]++
+	}
+	condencedSlice := []T{}
+	for _, element := range slice {
+		if elementsMet[element] != -1 {
+			condencedSlice = append(condencedSlice, element)
+			elementsMet[element] = -1
+		}
+	}
+	return condencedSlice
 }

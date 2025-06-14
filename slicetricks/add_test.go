@@ -25,3 +25,11 @@ func TestFilterANY(t *testing.T) {
 	fmt.Println(slice)
 	fmt.Println(newSlice)
 }
+
+func TestExcludeDuplica(t *testing.T) {
+	slice := []int{1, 2, 3, 4, 5, 5, 5, 3, 7, 2, 2, 2, 8, 0}
+	fmt.Println(slice)
+	slice = ExcludeDuplicates(slice)
+
+	fmt.Println(slice)
+}
