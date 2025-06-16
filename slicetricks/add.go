@@ -10,6 +10,22 @@ func Contains[T comparable](slice []T, element T) bool {
 	return false
 }
 
+// ContainsAll - return true if ALL element is present in slice.
+func ContainsAll[T comparable](slice []T, elements ...T) bool {
+	containMap := make(map[T]bool)
+	for i, e := range elements {
+		if e == slice[i] {
+			containMap[e] = true
+		}
+	}
+	for _, val := range containMap {
+		if !val {
+			return false
+		}
+	}
+	return true
+}
+
 // Append - its just append... nothing added.
 func Append[T any](slice []T, elements ...T) []T {
 	return append(slice, elements...)
