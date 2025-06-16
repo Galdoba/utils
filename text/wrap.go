@@ -2,28 +2,35 @@ package text
 
 import (
 	"strings"
+
+	"github.com/Galdoba/utils/slicetricks"
 )
 
 type wrapper struct {
-	maxWidth    int
-	leftOffset  int
-	rightOffset int
-	wrapLimit   int
-	wrapBefore  []string
-	wrapAfter   []string
+	lineMaxWidth int
+	linesAllowed int
+	leftOffset   int
+	rightOffset  int
+	wrapLimit    int
+	wrapBefore   []string
+	wrapAfter    []string
 }
 
 func Wrap(text string, options ...WrappingOption) string {
 	wr := wrapper{
-		maxWidth:   -1,
-		wrapAfter:  []string{" ", "-", "\t"},
-		wrapBefore: []string{"(", "[", "{", "`", `"`, "<"},
+		lineMaxWidth: -1,
+		linesAllowed: -1,
+		leftOffset:   0,
+		rightOffset:  0,
+		wrapLimit:    0,
+		wrapBefore:   []string{"(", "[", "{", "`", `"`, "<"},
+		wrapAfter:    []string{" ", "-", "\t"},
 	}
 	for _, set := range options {
 		set(&wr)
 	}
 	schema := schema(wr, text)
-	if wr.maxWidth < 1 {
+	if wr.lineMaxWidth < 1 {
 		return text
 	}
 	lines := composeLines(wr, schema)
@@ -33,9 +40,15 @@ func Wrap(text string, options ...WrappingOption) string {
 
 type WrappingOption func(*wrapper)
 
-func MaxWidth(mw int) WrappingOption {
+func LineMaxWidth(mw int) WrappingOption {
 	return func(w *wrapper) {
-		w.maxWidth = mw
+		w.lineMaxWidth = mw
+	}
+}
+
+func LinesAllowed(mw int) WrappingOption {
+	return func(w *wrapper) {
+		w.linesAllowed = mw
 	}
 }
 
@@ -45,7 +58,7 @@ func LeftOffset(lo int) WrappingOption {
 	}
 }
 
-func WrapLimit(wl int) WrappingOption {
+func WrapAllowed(wl int) WrappingOption {
 	return func(w *wrapper) {
 		w.wrapLimit = wl
 	}
@@ -80,8 +93,9 @@ func schema(wr wrapper, text string) wrappingSchema {
 	for i, l := range lits {
 		lit := litera{}
 		lit.text = l
-		lit.maybeStart = inSlice(wr.wrapBefore, l)
-		lit.maybeEnd = inSlice(wr.wrapAfter, l)
+		lit.maybeStart = slicetricks.Contains(wr.wrapBefore, l)
+		lit.maybeStart = slicetricks.Contains(wr.wrapBefore, l)
+		lit.maybeEnd = slicetricks.Contains(wr.wrapAfter, l)
 		for _, r := range l {
 			lit.rn = r
 		}
@@ -90,17 +104,8 @@ func schema(wr wrapper, text string) wrappingSchema {
 	return ws
 }
 
-func inSlice(sl []string, s string) bool {
-	for _, text := range sl {
-		if text == s {
-			return true
-		}
-	}
-	return false
-}
-
 func composeLines(wr wrapper, sc wrappingSchema) []string {
-	maxWidth := wr.maxWidth
+	lineMaxWidth := wr.lineMaxWidth
 	lines := []string{}
 	candidate := newCandidate(0)
 	trimmed := -1
@@ -115,7 +120,7 @@ func composeLines(wr wrapper, sc wrappingSchema) []string {
 		}
 		candidate = append(candidate, lit)
 
-		if len(candidate) == maxWidth {
+		if len(candidate) == lineMaxWidth {
 			candidate, trimmed = candidate.trimSuffix(wr.wrapLimit)
 			switch trimmed {
 			case 0:
@@ -131,7 +136,34 @@ func composeLines(wr wrapper, sc wrappingSchema) []string {
 
 	}
 	lines = append(lines, toLine(candidate))
+	lines = joinAfter(lines, wr.linesAllowed)
 	return lines
+}
+
+func joinAfter(slice []string, n int) []string {
+	switch n {
+	case 1:
+		return []string{strings.Join(slice, "")}
+	default:
+		if n < 1 {
+			return slice
+		}
+	}
+
+	joined := []string{}
+	for i, line := range slice {
+		if i == 0 {
+			joined = append(joined, line)
+			continue
+		}
+		switch i >= n {
+		case false:
+			joined = append(joined, line)
+		case true:
+			joined[len(joined)-1] = joined[len(joined)-1] + line
+		}
+	}
+	return joined
 }
 
 type candidate []litera
