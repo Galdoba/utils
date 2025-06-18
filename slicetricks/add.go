@@ -58,10 +58,25 @@ func Prepend[T any](slice []T, elements ...T) []T {
 
 // Insert - insert elements starting from index.
 func Insert[T any](slice []T, index int, elements ...T) []T {
-	if index < 0 || index >= len(slice) {
-		return slice
+	for i, element := range elements {
+		slice = insert(slice, index+i, element)
 	}
-	slice = append(slice[:index], append(elements, slice[index:]...)...)
+	return slice
+}
+
+func insert[T any](slice []T, index int, element T) []T {
+	if index < 0 {
+		index = 0
+	}
+	n := len(slice)
+	if index > n {
+		index = n
+	}
+	slice = append(slice, element)
+	if index < n {
+		copy(slice[index+1:], slice[index:])
+		slice[index] = element
+	}
 	return slice
 }
 
