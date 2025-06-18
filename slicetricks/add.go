@@ -1,9 +1,33 @@
 package slicetricks
 
+import "slices"
+
 // Contains - return true if element is present in slice.
 func Contains[T comparable](slice []T, element T) bool {
-	for _, s := range slice {
-		if element == s {
+	return slices.Contains(slice, element)
+}
+
+func ContainsAllFunc[T any](slice []T, equalFunc func(e1, e2 T) bool, elements ...T) bool {
+	for _, element := range elements {
+		if !containsFunc(slice, equalFunc, element) {
+			return false
+		}
+	}
+	return true
+}
+
+func ContainsAnyFunc[T any](slice []T, equalFunc func(e1, e2 T) bool, elements ...T) bool {
+	for _, element := range elements {
+		if containsFunc(slice, equalFunc, element) {
+			return true
+		}
+	}
+	return false
+}
+
+func containsFunc[T any](slice []T, equalFunc func(e1, e2 T) bool, element T) bool {
+	for _, inSlice := range slice {
+		if equalFunc(inSlice, element) {
 			return true
 		}
 	}
