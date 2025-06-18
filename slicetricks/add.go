@@ -33,12 +33,19 @@ func Append[T any](slice []T, elements ...T) []T {
 
 // AppendUnique - append ONLY elements NOT contained in slice.
 func AppendUnique[T comparable](slice []T, elements ...T) []T {
-	for _, e := range slice {
-		if !Contains(slice, e) {
-			slice = append(slice, e)
-		}
+	for _, element := range elements {
+		slice = appendUnique(slice, element)
 	}
 	return slice
+}
+
+func appendUnique[T comparable](slice []T, element T) []T {
+	for _, value := range slice {
+		if value == element {
+			return slice
+		}
+	}
+	return append(slice, element)
 }
 
 // Prepend - add elements
