@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -20,37 +21,40 @@ func Project(pp pathPlot) string {
 }
 
 func projectDirectory(pp pathPlot) string {
-	root := ""
+	var sb strings.Builder
 	switch pp.root {
 	case ROOT:
-		root = sep
+		sb.WriteString(sep)
 	case HOME:
-		root = HomeDir()
+		sb.WriteString(HomeDir())
 	case LOG:
-		root = LogDir()
+		sb.WriteString(LogDir())
 	case CONFIG:
-		root = ConfigDir()
+		sb.WriteString(ConfigDir())
 	case DATA:
-		root = ProgramsDir()
+		sb.WriteString(ProgramsDir())
 	case WORK:
-		root = WorkDir()
+		sb.WriteString(WorkDir())
 	}
 	for _, layer := range pp.upperLayers {
 		if layer == "" {
 			continue
 		}
-		root += layer + sep
+		sb.WriteString(layer)
+		sb.WriteString(sep)
 	}
 	if pp.target != "" {
-		root += pp.target + sep
+		sb.WriteString(pp.target)
+		sb.WriteString(sep)
 	}
 	for _, layer := range pp.lowerLayers {
 		if layer == "" {
 			continue
 		}
-		root += layer + sep
+		sb.WriteString(layer)
+		sb.WriteString(sep)
 	}
-	return asDir(root)
+	return sb.String()
 }
 
 // Status - return status message of plots projection.
@@ -61,26 +65,32 @@ func Status(pp pathPlot) string {
 	path := Project(pp)
 	layers := strings.Split(path, sep)
 	last := len(layers) - 1
-	reconstructed := ""
+	// reconstructed := ""
+	var sb strings.Builder
 	for lNumper, layer := range layers {
 		switch lNumper {
 		default:
-			reconstructed += layer + sep
-			st, err := os.Stat(reconstructed)
+			// reconstructed += layer + sep
+			sb.WriteString(layer)
+			sb.WriteString(sep)
+			// st, err := os.Stat(reconstructed)
+			st, err := os.Stat(sb.String())
 			if err != nil {
 				if errors.Is(err, os.ErrNotExist) {
-					return fmt.Sprintf("path status: upper layer directory does not exist (%v)", reconstructed)
+					return fmt.Sprintf("path status: upper layer directory does not exist (%v)", sb.String())
 				}
-				return fmt.Sprintf("path status: no stats for layer %v: %v", reconstructed, err)
+				return fmt.Sprintf("path status: no stats for layer %v: %v", sb.String(), err)
 			}
 			if !st.IsDir() {
-				return fmt.Sprintf("path status: upper layer is not a directory (%v)", reconstructed)
+				return fmt.Sprintf("path status: upper layer is not a directory (%v)", sb.String())
 			}
 		case last:
 			switch pp.file {
 			case "":
-				reconstructed += layer + sep
-				st, err := os.Stat(reconstructed)
+				// reconstructed += layer + sep
+				sb.WriteString(layer)
+				sb.WriteString(sep)
+				st, err := os.Stat(sb.String())
 				if err != nil {
 					if errors.Is(err, os.ErrNotExist) {
 						return fmt.Sprintf("path status: directory does not exist")
@@ -91,8 +101,9 @@ func Status(pp pathPlot) string {
 					return fmt.Sprintf("path status: plot is not a directory")
 				}
 			default:
-				reconstructed += pp.file
-				st, err := os.Stat(reconstructed)
+				// 				sb.String()+= pp.file
+				sb.WriteString(pp.file)
+				st, err := os.Stat(sb.String())
 				if err != nil {
 					if errors.Is(err, os.ErrNotExist) {
 						return fmt.Sprintf("path status: plot file does not exist")
@@ -115,18 +126,15 @@ func Pave(pp pathPlot) error {
 	if err := assertPlot(pp); err != nil {
 		return fmt.Errorf("failed to assert path: %v", err)
 	}
-	path := Project(pp)
-	_, err := os.Stat(path)
-	if err == nil {
-		return nil
-	}
-	if err := os.MkdirAll(projectDirectory(pp), 0777); err != nil {
+	dir := projectDirectory(pp)
+	if err := os.MkdirAll(dir, 0777); err != nil {
 		return fmt.Errorf("failed to create directory: %v", err)
 	}
 	if pp.file == "" {
 		return nil
 	}
-	f, err := os.OpenFile(path, os.O_RDONLY|os.O_CREATE, 0777)
+	filepath := filepath.Join(dir, pp.file)
+	f, err := os.OpenFile(filepath, os.O_RDONLY|os.O_CREATE, 0777)
 	if err != nil {
 		return fmt.Errorf("failed to read/create plotted file")
 	}

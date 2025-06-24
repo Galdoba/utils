@@ -5,21 +5,42 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 )
 
 var sep = string(filepath.Separator)
 
 func asDir(path string) string {
-	return strings.TrimSuffix(path, sep) + sep
+	if path == "" {
+		return sep
+	}
+	if strings.HasSuffix(path, sep) {
+		return path
+	}
+	return path + sep
 }
+
+var (
+	homeDirCache     string
+	homeOnce         sync.Once
+	configDirCache   string
+	configOnce       sync.Once
+	logDirCache      string
+	logOnce          sync.Once
+	programsDirCache string
+	programsOnce     sync.Once
+)
 
 // HomeDir - return user home dir.
 func HomeDir() string {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		panic(fmt.Sprintf("no home found: %v", err))
-	}
-	return asDir(home)
+	homeOnce.Do(func() {
+		home, err := os.UserHomeDir()
+		if err != nil {
+			panic(fmt.Sprintf("no home found: %v", err))
+		}
+		homeDirCache = asDir(home)
+	})
+	return homeDirCache
 }
 
 // WorkDir - return current working dir.
@@ -32,11 +53,20 @@ func WorkDir() string {
 }
 
 func ConfigDir() string {
-	return asDir(HomeDir() + ".config")
+	configOnce.Do(func() {
+		configDirCache = asDir(HomeDir()) + ".config"
+	})
+	return configDirCache
 }
 func LogDir() string {
-	return asDir(HomeDir() + ".log")
+	logOnce.Do(func() {
+		logDirCache = asDir(HomeDir()) + ".log"
+	})
+	return logDirCache
 }
 func ProgramsDir() string {
-	return asDir(HomeDir() + "Programs")
+	programsOnce.Do(func() {
+		programsDirCache = asDir(HomeDir()) + "Programs"
+	})
+	return configDirCache
 }
