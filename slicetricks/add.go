@@ -1,9 +1,33 @@
 package slicetricks
 
+import "slices"
+
 // Contains - return true if element is present in slice.
 func Contains[T comparable](slice []T, element T) bool {
-	for _, s := range slice {
-		if element == s {
+	return slices.Contains(slice, element)
+}
+
+func ContainsAllFunc[T any](slice []T, equalFunc func(e1, e2 T) bool, elements ...T) bool {
+	for _, element := range elements {
+		if !containsFunc(slice, equalFunc, element) {
+			return false
+		}
+	}
+	return true
+}
+
+func ContainsAnyFunc[T any](slice []T, equalFunc func(e1, e2 T) bool, elements ...T) bool {
+	for _, element := range elements {
+		if containsFunc(slice, equalFunc, element) {
+			return true
+		}
+	}
+	return false
+}
+
+func containsFunc[T any](slice []T, equalFunc func(e1, e2 T) bool, element T) bool {
+	for _, inSlice := range slice {
+		if equalFunc(inSlice, element) {
 			return true
 		}
 	}
@@ -33,12 +57,19 @@ func Append[T any](slice []T, elements ...T) []T {
 
 // AppendUnique - append ONLY elements NOT contained in slice.
 func AppendUnique[T comparable](slice []T, elements ...T) []T {
-	for _, e := range slice {
-		if !Contains(slice, e) {
-			slice = append(slice, e)
-		}
+	for _, element := range elements {
+		slice = appendUnique(slice, element)
 	}
 	return slice
+}
+
+func appendUnique[T comparable](slice []T, element T) []T {
+	for _, value := range slice {
+		if value == element {
+			return slice
+		}
+	}
+	return append(slice, element)
 }
 
 // Prepend - add elements
@@ -51,10 +82,25 @@ func Prepend[T any](slice []T, elements ...T) []T {
 
 // Insert - insert elements starting from index.
 func Insert[T any](slice []T, index int, elements ...T) []T {
-	if index < 0 || index >= len(slice) {
-		return slice
+	for i, element := range elements {
+		slice = insert(slice, index+i, element)
 	}
-	slice = append(slice[:index], append(elements, slice[index:]...)...)
+	return slice
+}
+
+func insert[T any](slice []T, index int, element T) []T {
+	if index < 0 {
+		index = 0
+	}
+	n := len(slice)
+	if index > n {
+		index = n
+	}
+	slice = append(slice, element)
+	if index < n {
+		copy(slice[index+1:], slice[index:])
+		slice[index] = element
+	}
 	return slice
 }
 
