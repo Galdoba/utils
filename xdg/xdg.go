@@ -1,6 +1,7 @@
 package xdg
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 )
@@ -21,7 +22,6 @@ type Pathfinder struct {
 	appName string
 	user    string
 	profile string
-	layers  []string
 }
 
 // Инициализация менеджера путей
@@ -46,67 +46,90 @@ func AppName(appName string) PathfinderOption {
 	}
 }
 
+func Profile(profile string) PathfinderOption {
+	return func(p *Pathfinder) {
+		p.profile = profile
+	}
+}
+
 // Получение пути по типу
-func (p *Pathfinder) GetDir(dirType DirType) (string, error) {
+func (p *Pathfinder) FindPath(dirType DirType, layers ...string) (string, error) {
+	path := ""
+	err := fmt.Errorf("path not called")
 	switch dirType {
 	case Config:
-		return p.configDir()
+		path, err = p.configDir()
 	case Data:
-		return p.dataDir()
+		path, err = p.dataDir()
 	case Cache:
-		return p.cacheDir()
+		path, err = p.cacheDir()
 	case State:
-		return p.stateDir()
+		path, err = p.stateDir()
 	case Runtime:
-		return p.runtimeDir()
+		path, err = p.runtimeDir()
 	default:
 		return "", os.ErrInvalid
 	}
-}
-
-// Создание каталога по типу
-func (p *Pathfinder) EnsureDir(dirType DirType, perm os.FileMode) (string, error) {
-	path, err := p.GetDir(dirType)
 	if err != nil {
 		return "", err
 	}
-	if err := os.MkdirAll(path, perm); err != nil {
-		return "", err
+	switch p.profile {
+	case "":
+		//return "", fmt.Errorf("app name not provided to pathfinder")
+	default:
+		path = filepath.Join(path, p.profile)
 	}
+	for _, l := range layers {
+		path = filepath.Join(path, l)
+	}
+
 	return path, nil
 }
 
-func (p *Pathfinder) ConfigFile(filename string, layers ...string) (string, error) {
-	dir, err := p.EnsureDir(Config, 0700)
-	fullPath := []string{dir}
-	fullPath = append(fullPath, layers...)
-	fullPath = append(fullPath, filename)
-	return filepath.Join(fullPath...), err
-}
+// Создание каталога по типу
+// func (p *Pathfinder) EnsureDir(dirType DirType, perm os.FileMode) (string, error) {
+// 	path, err := p.FindPath(dirType)
+// 	if err != nil {
+// 		return "", err
+// 	}
 
-func (p *Pathfinder) AssetFile(filename string, layers ...string) (string, error) {
-	dir, err := p.EnsureDir(Data, 0700)
-	fullPath := []string{dir}
-	fullPath = append(fullPath, layers...)
-	fullPath = append(fullPath, filename)
-	return filepath.Join(fullPath...), err
-}
+// 	if err := os.MkdirAll(path, perm); err != nil {
+// 		return "", err
+// 	}
+// 	return path, nil
+// }
 
-func (p *Pathfinder) LogFile(filename string, layers ...string) (string, error) {
-	dir, err := p.EnsureDir(State, 0700)
-	fullPath := []string{dir}
-	fullPath = append(fullPath, layers...)
-	fullPath = append(fullPath, filename)
-	return filepath.Join(fullPath...), err
-}
+// func (p *Pathfinder) ConfigFile(filename string, layers ...string) (string, error) {
+// 	dir, err := p.EnsureDir(Config, 0700)
+// 	fullPath := []string{dir}
+// 	fullPath = append(fullPath, layers...)
+// 	fullPath = append(fullPath, filename)
+// 	return filepath.Join(fullPath...), err
+// }
 
-func (p *Pathfinder) CacheFile(filename string, layers ...string) (string, error) {
-	dir, err := p.EnsureDir(Cache, 0700)
-	fullPath := []string{dir}
-	fullPath = append(fullPath, layers...)
-	fullPath = append(fullPath, filename)
-	return filepath.Join(fullPath...), err
-}
+// func (p *Pathfinder) AssetFile(filename string, layers ...string) (string, error) {
+// 	dir, err := p.EnsureDir(Data, 0700)
+// 	fullPath := []string{dir}
+// 	fullPath = append(fullPath, layers...)
+// 	fullPath = append(fullPath, filename)
+// 	return filepath.Join(fullPath...), err
+// }
+
+// func (p *Pathfinder) LogFile(filename string, layers ...string) (string, error) {
+// 	dir, err := p.EnsureDir(State, 0700)
+// 	fullPath := []string{dir}
+// 	fullPath = append(fullPath, layers...)
+// 	fullPath = append(fullPath, filename)
+// 	return filepath.Join(fullPath...), err
+// }
+
+// func (p *Pathfinder) CacheFile(filename string, layers ...string) (string, error) {
+// 	dir, err := p.EnsureDir(Cache, 0700)
+// 	fullPath := []string{dir}
+// 	fullPath = append(fullPath, layers...)
+// 	fullPath = append(fullPath, filename)
+// 	return filepath.Join(fullPath...), err
+// }
 
 // Реализация базовых путей
 func (p *Pathfinder) configDir() (string, error) {
